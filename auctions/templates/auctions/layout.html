@@ -10,17 +10,7 @@
     <body>
         
         <h1>Auctions</h1>
-        
-        {% if user.is_authenticated %}
-            <div>
-                Signed in as <strong>{{ user.name }}</strong>
-            </div>
-        {% else %}
-            <div>
-                Not logged in
-            </div>
-        {% endif %}
-        
+
         <ul class="nav">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
