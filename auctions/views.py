@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+
 
 from .models import User
 from .forms import ListingForm
@@ -64,9 +66,9 @@ def register(request):
 
 
 
-
+@login_required
 def create(request):
-    form = ListingForm()
+    form = ListingForm(initial={'listed_by': request.user})
     if request.method=='POST':
         form = ListingForm(request.POST)
 
