@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="row">
+
+        <div class='col-sm'>
+            <img src={{ listing.image_url }} />
+        </div>
+        <div class='col-sm'>
+            <h1>{{ listing.name }}</h1>
+            <p>{{ listing.description}}</p>
+        </div>
+    </div>
+{% endblock %}

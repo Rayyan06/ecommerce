@@ -1,35 +1,39 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
 
-    <div class='form-group'>
-        {{ form.name.errors }}
-        <label for="{{ form.name.id_for_label }}">Name</label>
-        {{ form.name }}
-    </div>
-    <div class='form-group'>
-        {{ form.description.errors }}
-        <label for="{{ form.description.id_for_label }}">Description</label>
-        {{ form.description }}
-    </div>
-    <div class='form-group'>
-        {{ form.starting_bid.errors }}
-        <label for="{{ form.starting_bid.id_for_label }}">Starting Bid</label>
-        {{ form.starting_bid }}
-    </div>
-    <div class='form-group'>
-        {{ form.image_url.errors }}
-        <label for="{{ form.image_url.id_for_label }}">Image URL</label>
-        {{ form.image_url }}
-    </div>
-    <div class='form-group'>
-        {{ form.category.errors }}
-        <label for="{{ form.category.id_for_label }}">Category</label>
-        {{ form.category }}
-    </div>
-    
-    <input type="submit">
-</form>
+<div class="h-100">
+    <h1>Create a Listing</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class='form-group'>
+            {{ form.name.errors }}
+            <label for="{{ form.name.id_for_label }}">Name</label>
+            {{ form.name }}
+        </div>
+        <div class='form-group'>
+            {{ form.description.errors }}
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+        </div>
+        <div class='form-group'>
+            {{ form.starting_bid.errors }}
+            <label for="{{ form.starting_bid.id_for_label }}">Starting Bid</label>
+            {{ form.starting_bid }}
+        </div>
+        <div class='form-group'>
+            {{ form.image_url.errors }}
+            <label for="{{ form.image_url.id_for_label }}">Image URL</label>
+            {{ form.image_url }}
+        </div>
+        <div class='form-group'>
+            {{ form.category.errors }}
+            <label for="{{ form.category.id_for_label }}">Category</label>
+            {{ form.category }}
+        </div>
+        
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
 {% endblock %} 

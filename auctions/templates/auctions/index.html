@@ -1,7 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <div class="container py-5">
+        <h2>Active Listings</h2>
+    </div>
+    <div class="card-columns">
+        {% for listing in listings %}
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ listing.image_url }}" alt="Bed">
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.name }}</h5>
+                    <p class="card-text">{{ listing.description }}</p>
+                    <a href="{% url 'listing' listing.id %}" class="btn btn-primary">Go to listing</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-    TODO
 {% endblock %}

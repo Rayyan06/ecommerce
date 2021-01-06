@@ -6,11 +6,13 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User
+from .models import User, Listing
 from .forms import ListingForm
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -78,4 +80,9 @@ def create(request):
         
     return render(request, "auctions/create.html", {
         "form": form,
+    })
+
+def listing(request, listing_id):
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(pk=listing_id)
     })
