@@ -6,8 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User, Listing
-from .forms import ListingForm
+from .models import User, Listing, Bid
+from .forms import ListingForm, BidForm
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -84,14 +84,32 @@ def create(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
+
+    if request.method=='POST':
+        form = BidForm(request.POST, request_user=request.user, listing=listing)
+
+        if form.is_valid():
+            amount = form.cleaned_data["amount"]
+            print(amount)
+
+            Bid.objects.create(user=request.user, amount=amount, listing=listing)
+
+   
+        
+    else:
+        form = BidForm(request_user=request.user, listing=listing)
+
+    listing_in_watchlist = False
+    is_creator = (request.user == listing.listed_by)
+
     if listing in request.user.watchlist.all():
         listing_in_watchlist = True
-    else:
-        listing_in_watchlist = False
 
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "listing_in_watchlist": listing_in_watchlist
+        "listing_in_watchlist": listing_in_watchlist,
+        "is_creator": is_creator,
+        "form": form
     })
 
 
@@ -100,14 +118,20 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist": request.user.watchlist.all()
     })
+
 # Add and Remove from watchlist views
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     if request.user.watchlist:
         request.user.watchlist.add(listing)
 
-    return HttpResponseRedirect(reverse("watchlist"))
+    return HttpResponseRedirect(reverse("listing", args=[listing_id]))
 
 def remove_from_watchlist(request, listing_id):
-    listing = Listing.objects.get(listing_id)
+    listing = Listing.objects.get(pk=listing_id)
     request.user.watchlist.remove(listing)
+
+    return HttpResponseRedirect(reverse("watchlist"))
+
+
+

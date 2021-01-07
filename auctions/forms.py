@@ -1,4 +1,4 @@
-from .models import Listing
+from .models import Listing, Bid
 from django import forms
 
 class ListingForm(forms.ModelForm):
@@ -16,3 +16,38 @@ class ListingForm(forms.ModelForm):
 
         }
 
+
+class BidForm(forms.Form):
+
+    amount = forms.IntegerField(widget=forms.NumberInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Bid Amount'
+            }
+        ))
+
+
+    def __init__(self, *args, **kwargs):
+        """
+        Override the __init__ method so we can have access
+        to request.user and listing_id for validation
+        """
+        self.request_user = kwargs.pop("request_user")
+        self.listing = kwargs.pop("listing")
+        super(BidForm, self).__init__(*args, **kwargs)
+    
+    def clean_amount(self):
+
+        amount = self.cleaned_data["amount"]
+
+        if self.listing.price > amount:
+            raise forms.ValidationError(f"Please bid higher than the current bid (${self.listing.price})")
+        
+        return amount
+        
+
+        
+        
+
+
+ 

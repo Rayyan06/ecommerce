@@ -7,14 +7,35 @@
             <img class="img-fluid" src="{{ listing.image_url }}" />
         </div>
         <div class='col-md-4 py-3'>
-            <h1>{{ listing.name }}</h1>
+            <div class="row">
+                <h1>{{ listing.name }}</h1>
+               
+            </div>
+             <h1><strong>${{ listing.price }}</strong></h1>
             {% if listing_in_watchlist %}
-                 <a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Remove from Watchlist</a>
+                <a href="{% url 'watchlist' %}" class="badge badge-primary">Watchlist</a>
+
+                 <a class="btn btn-outline-secondary btn-sm" href="{% url 'remove_from_watchlist' listing.id %}">Remove from Watchlist</a>
             {% else %}
-                <a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
+                <a class="btn btn-outline-secondary btn-sm" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
             {% endif %}
-            <p>{{ listing.description}}</p>
-            <h3><strong>${{ listing.price }}</strong></h3>
+            <div class="row py-5">
+                <p>{{ listing.description}}</p>
+           </div>
+           <div class="row py-2">
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.amount.errors }}
+                        <small id="bidHelper" class="form-text text-muted">
+                            {{ listing.bids.count }} Bid(s) so far.
+                        </small>
+                        {{ form.listing_id }}
+                        {{ form.amount }}
+                    </div>
+                    <input type="submit" value="Bid" class="btn btn-primary">
+                </form>
+           </div>
         </div>
         <div class='col-12 py-4'>
             <h3>Details</h3>

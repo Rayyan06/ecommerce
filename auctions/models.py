@@ -31,13 +31,13 @@ class Listing(models.Model):
 
     def get_greatest_bid(self):
 
-        return self.bids.order_by('amount').first() 
+        return self.bids.order_by('-amount').first() 
 
     
     @property
     def price(self):
         if self.get_greatest_bid():
-            return self.get_greatest_bid()
+            return self.get_greatest_bid().amount
         else:
             return self.starting_bid
 

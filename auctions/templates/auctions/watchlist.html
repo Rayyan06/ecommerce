@@ -1,12 +1,19 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
 
-<h1>Watchlist</h1>
+<h1>My Watchlist</h1>
 
-<ul>
+<div class="row row-cols-1 row-cols-md-2 pt-5">
     {% for item in watchlist %}
-        <a href="{% url 'listing' item.id %}"><li>{{ item }}</li></a>
+        <div class="col-mb-4">
+            {% include "auctions/listing_card.html" with listing=item %}
+        </div>
+    {% empty %}
+        <div class="col">
+            <p>You have nothing in your watchlist at the moment. Would you like to <a href="{% url 'index' %}">browse</a> active listings?</p>
+        </div>
+
     {% endfor %}
-</ul>
+</div>
 
 {% endblock %}
