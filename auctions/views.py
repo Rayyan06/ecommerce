@@ -83,8 +83,15 @@ def create(request):
     })
 
 def listing(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    if listing in request.user.watchlist.all():
+        listing_in_watchlist = True
+    else:
+        listing_in_watchlist = False
+
     return render(request, "auctions/listing.html", {
-        "listing": Listing.objects.get(pk=listing_id)
+        "listing": listing,
+        "listing_in_watchlist": listing_in_watchlist
     })
 
 

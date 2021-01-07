@@ -7,7 +7,12 @@
             <img class="img-fluid" src="{{ listing.image_url }}" />
         </div>
         <div class='col-md-4 py-3'>
-            <h1>{{ listing.name }}</h1><a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
+            <h1>{{ listing.name }}</h1>
+            {% if listing_in_watchlist %}
+                 <a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Remove from Watchlist</a>
+            {% else %}
+                <a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
+            {% endif %}
             <p>{{ listing.description}}</p>
             <h3><strong>${{ listing.price }}</strong></h3>
         </div>

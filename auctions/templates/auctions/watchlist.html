@@ -5,7 +5,7 @@
 
 <ul>
     {% for item in watchlist %}
-        <li>{{ item }}</li>
+        <a href="{% url 'listing' item.id %}"><li>{{ item }}</li></a>
     {% endfor %}
 </ul>
 
