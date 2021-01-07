@@ -1,14 +1,22 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <div class="row">
+    <div class="row py-5">
 
-        <div class='col-sm'>
-            <img src={{ listing.image_url }} />
+        <div class='col-md-8'>
+            <img class="img-fluid" src="{{ listing.image_url }}" />
         </div>
-        <div class='col-sm'>
-            <h1>{{ listing.name }}</h1>
+        <div class='col-md-4 py-3'>
+            <h1>{{ listing.name }}</h1><a class="btn btn-secondary" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
             <p>{{ listing.description}}</p>
+            <h3><strong>${{ listing.price }}</strong></h3>
+        </div>
+        <div class='col-12 py-4'>
+            <h3>Details</h3>
+            <ul>
+                <li> Listed By: <strong>{{ listing.listed_by }}</strong></li>
+                <li> Category: <a href="#">{{ listing.get_category_display }}</a></li>
+            </ul>
         </div>
     </div>
 {% endblock %}

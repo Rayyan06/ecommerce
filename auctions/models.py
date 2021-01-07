@@ -9,12 +9,13 @@ CATEGORIES = [
 ]
 
 class User(AbstractUser):
-    pass
+    watchlist = models.ManyToManyField("Listing", null=True)
 
 
 
 class Listing(models.Model):
     name = models.CharField(max_length=64)
+    is_active = models.BooleanField(default=True)
     description = models.CharField(max_length=256)
     listed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     starting_bid = models.IntegerField()
@@ -28,6 +29,19 @@ class Listing(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def get_greatest_bid(self):
+
+        return self.bids.order_by('amount').first() 
+
+    
+    @property
+    def price(self):
+        if self.get_greatest_bid():
+            return self.get_greatest_bid()
+        else:
+            return self.starting_bid
+
+
 
 class Bid(models.Model):
     amount = models.IntegerField()
@@ -35,7 +49,7 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, related_name="bids", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"${self.amount}"
+        return f"{self.amount}"
 
     
 
