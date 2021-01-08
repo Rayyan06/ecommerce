@@ -27,7 +27,7 @@ def category(request, category_str):
             category_name = item[1]
     return render(request, "auctions/category.html", {
         "category_name": category_name,
-        "listings": Listing.objects.filter(category=category_str)
+        "listings": Listing.objects.filter(category=category_str).filter(is_active=True)
     })
 
 
@@ -134,14 +134,20 @@ def listing(request, listing_id):
         listing_in_watchlist = True
 
     if not listing.is_active:
-        highest_bid = listing.get_greatest_bid()
-        if request.user == highest_bid.user:
-            messages.add_message(request, messages.INFO, f"Congratulations, you have won this auction!")
-        else:
-            if is_creator:
-                messages.add_message(request, messages.INFO, f"You have closed this listing. The winner was <strong>{highest_bid.user}</strong>.")
+        highest_bid = listing.starting_bid
+        if listing.get_greatest_bid():
+            highest_bid = listing.get_greatest_bid()
+
+            if request.user == highest_bid.user:
+                messages.add_message(request, messages.INFO, f"Congratulations, you have won this auction!")
             else:
-                messages.add_message(request, messages.INFO, f"Oh no, you lost this listing! Better luck next time...")
+                if is_creator:
+                    messages.add_message(request, messages.INFO, f"You have closed this listing. The winner was <strong>{highest_bid.user}</strong>.")
+                else:
+                    messages.add_message(request, messages.INFO, f"Oh no, you lost this listing! Better luck next time...")
+
+        else:
+            messages.add_message(request, messages.INFO, f"Listing closed and nobody won")
 
             
 
