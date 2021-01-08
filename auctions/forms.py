@@ -1,11 +1,12 @@
-from .models import Listing, Bid
+from .models import Listing, Bid, Comment
 from django import forms
 
 class ListingForm(forms.ModelForm):
-   
+    listed_by = forms.CharField(required=False)
+
     class Meta:
         model = Listing
-        fields=['name', 'description', 'starting_bid', 'image_url', 'category', 'listed_by']
+        fields=['name', 'description', 'starting_bid', 'image_url', 'category']
         widgets = {
             'listed_by': forms.HiddenInput(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -47,7 +48,16 @@ class BidForm(forms.Form):
         
 
         
-        
+    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [ 'title','text']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control mb-1', 'placeholder': 'Title'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Comment Text'}),
+
+        }
 
 
  

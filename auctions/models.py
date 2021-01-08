@@ -9,7 +9,7 @@ CATEGORIES = [
 ]
 
 class User(AbstractUser):
-    watchlist = models.ManyToManyField("Listing", null=True)
+    watchlist = models.ManyToManyField("Listing", blank=True)
 
 
 
@@ -43,8 +43,11 @@ class Listing(models.Model):
 
 
 
+
+
+
 class Bid(models.Model):
-    amount = models.IntegerField()
+    amount = models.DecimalField(decimal_places=2, max_digits=4)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, related_name="bids", on_delete=models.CASCADE)
 
@@ -54,8 +57,15 @@ class Bid(models.Model):
     
 
 class Comment(models.Model):
+    title = models.CharField(max_length=20)
     text = models.CharField(max_length=64)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text
+    
 
     
 

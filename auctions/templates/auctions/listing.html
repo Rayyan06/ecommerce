@@ -1,6 +1,19 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                
+                    <div class="alert alert-primary alert-dismissable fade show {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                        {{ message|safe }} 
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="row py-5">
 
         <div class='col-md-8'>
@@ -11,30 +24,53 @@
                 <h1>{{ listing.name }}</h1>
                
             </div>
-             <h1><strong>${{ listing.price }}</strong></h1>
-            {% if listing_in_watchlist %}
-                <a href="{% url 'watchlist' %}" class="badge badge-primary">Watchlist</a>
-
-                 <a class="btn btn-outline-secondary btn-sm" href="{% url 'remove_from_watchlist' listing.id %}">Remove from Watchlist</a>
-            {% else %}
-                <a class="btn btn-outline-secondary btn-sm" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
-            {% endif %}
-            <div class="row py-5">
-                <p>{{ listing.description}}</p>
-           </div>
-           <div class="row py-2">
-                <form action="{% url 'listing' listing.id %}" method="POST">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ form.amount.errors }}
-                        <small id="bidHelper" class="form-text text-muted">
-                            {{ listing.bids.count }} Bid(s) so far.
-                        </small>
-                        {{ form.amount }}
+            <div class="row">
+                <p>Price:</hp>
+                <h3 class='text-primary'>${{ listing.price }}</h3>
+            </div>
+             {% if request.user.is_authenticated %}
+                {% if is_creator and listing.is_active %}
+                    <div class="row py-1">
+                        <a href="{% url 'close_auction' listing.id %}" class="btn btn-danger">Close Auction</a>
                     </div>
-                    <input type="submit" value="Bid" class="btn btn-primary">
-                </form>
-           </div>
+                {% endif %}
+
+
+
+                {% if listing_in_watchlist %}
+                    <a href="{% url 'watchlist' %}" class="badge badge-primary">Watchlist</a>
+
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'remove_from_watchlist' listing.id %}">Remove from Watchlist</a>
+                {% else %}
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'add_to_watchlist' listing.id %}">Add to Watchlist</a>
+                {% endif %}
+            {% endif %}
+                <div class="row py-5">
+                    <p>{{ listing.description}}</p>
+                </div>
+            {% if request.user.is_authenticated %}
+        
+                <div class="row py-2">
+                    {% if listing.is_active %}
+                        <form action="{% url 'listing' listing.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ bid_form.amount.errors }}
+                                <small id="bidHelper" class="form-text text-muted">
+                                    {{ listing.bids.count }} Bid(s) so far.
+                                </small>
+                                {{ bid_form.amount }}
+                            </div>
+                            <input type="submit" value="Bid" class="btn btn-primary">
+                        </form>
+                    {% else %}
+                        <p>Sorry, this listing is no longer active. Would you like to view <a href="{% url 'index' %}">other</a> listings?</p>
+                    {% endif %}
+                </div>
+                
+            {% else %}
+            <h3>You must be <a href="{% url 'login' %}">logged in</a> to bid.</h3>
+            {% endif %}
         </div>
         <div class='col-12 py-4'>
             <h3>Details</h3>
@@ -43,5 +79,46 @@
                 <li> Category: <a href="#">{{ listing.get_category_display }}</a></li>
             </ul>
         </div>
+        <div class='col-9 py-5'>
+
+            <h2> Comments </h2>
+            <hr>
+            <h4>Add a comment</h4>
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'comment' listing.id %}" method='POST'>
+                    {% csrf_token %}
+                    {{ comment_form }}
+                    
+                    <input class='btn btn-outline-secondary mt-2' value='Comment' type='submit'>
+
+
+                </form>
+            {% else %}
+                <p> You must be logged in to comment </p>
+            {% endif %}
+            <hr>
+            <div class='row py-5'>
+                <div class='list-group'>
+                    {% for comment in listing.comments.all %}
+                        <div class='list-group-item'>
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1 mr-5">{{ comment.title }}</h5>
+                                <small class='text-muted'>{{ comment.date }}</small>
+                            </div>
+                    
+
+                        <p class="mb-1">{{ comment.text }}</p>
+                        <small class='text-muted'>
+                            by <strong>{{ comment.user }}</strong>
+                        </small>
+                    </div>
+                    {% empty %}
+                        <p>No one has commented on this listing yet. Be the first to comment!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
     </div>
+    
 {% endblock %}
