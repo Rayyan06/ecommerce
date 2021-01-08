@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
+        
 CATEGORIES = [
     ('FA', 'Fashion'),
     ('TO', 'Toys'),
@@ -14,6 +16,8 @@ class User(AbstractUser):
 
 
 class Listing(models.Model):
+
+
     name = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
     description = models.CharField(max_length=256)

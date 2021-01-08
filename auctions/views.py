@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User, Listing, Bid
+from .models import User, Listing, Bid, CATEGORIES
 from .forms import ListingForm, BidForm, CommentForm
 
 def index(request):
@@ -15,6 +15,11 @@ def index(request):
         "listings": Listing.objects.filter(is_active=True)
     })
 
+def categories(request):
+        
+    return render(request, "auctions/categories.html", {
+        "categories": CATEGORIES
+    })
 
 def login_view(request):
     if request.method == "POST":

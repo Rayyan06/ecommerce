@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+    <div class="container py-5">
+        <h1>Browse Categories</h1>
+    </div>
+    <hr>
+    <div class="card" style="width: 18rem;">
+        <ul class="list-group list-group-flush">
+
+            {% for category in categories %}
+                 <a href="#" class="list-group-item list-group-item-action">{{ category.1 }}</a>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
