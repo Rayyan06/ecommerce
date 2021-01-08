@@ -5,10 +5,14 @@
         <h1>Active Listings</h1>
     </div>
     <hr>
-    <div class="card-columns">
-        {% for listing in listings %}
+  
+    {% for listing in listings %}
+        <div class="card-columns">
             {% include "auctions/listing_card.html" %}
-        {% endfor %}
-    </div>
+            </div>
+    {% empty %}
+        <p>There are currently no active listings. Would you like to <a href="{% url 'create' %}">create</a> one?</p>
+    {% endfor %}
+   
 
 {% endblock %}
