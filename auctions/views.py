@@ -16,10 +16,20 @@ def index(request):
     })
 
 def categories(request):
-        
+    
     return render(request, "auctions/categories.html", {
         "categories": CATEGORIES
     })
+
+def category(request, category_str):
+    for item in CATEGORIES:
+        if item[0] == category_str:
+            category_name = item[1]
+    return render(request, "auctions/category.html", {
+        "category_name": category_name,
+        "listings": Listing.objects.filter(category=category_str)
+    })
+
 
 def login_view(request):
     if request.method == "POST":

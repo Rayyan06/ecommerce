@@ -8,7 +8,7 @@
         <ul class="list-group list-group-flush">
 
             {% for category in categories %}
-                 <a href="#" class="list-group-item list-group-item-action">{{ category.1 }}</a>
+                 <a href="{% url 'category' category.0 %}" class="list-group-item list-group-item-action">{{ category.1 }}</a>
             {% endfor %}
         </ul>
     </div>
