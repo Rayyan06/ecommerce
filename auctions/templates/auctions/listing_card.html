@@ -1,14 +1,18 @@
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="{{ listing.image_url }}" alt="Bed">
-    <div class="card-body">
-        <h5 class="card-title">{{ listing.name }}</h5>
-        <h5 class="card-title"><strong>${{ listing.price }}</strong></h5>
-        <p class="card-text">{{ listing.description }}</p>
-            <div>
-                <a class="btn btn-outline-primary text-start" href="{% url 'listing' listing.id %}" class="btn btn-primary">Go to listing</a>
-                {% if watchlist %}
-                    <a class="text-end btn btn-outline-danger" href="{% url "remove_from_watchlist" listing.id %}">Delete <i class="fas fa-trash"></i></a>
-                {% endif %}
-            </div>
+<!--div class="col mb-4"-->
+    <div class="card">
+        <img class="card-img-top" src="{{ listing.image_url }}" alt="Bed">
+        <div class="card-body">
+            <h5 class="card-title">{{ listing.name }}</h5>
+            <h5 class="card-title"><strong>${{ listing.price }}</strong></h5>
+            <p class="card-text">{{ listing.description }}</p>
+                <div>
+                    <a class="btn btn-outline-primary text-start" href="{% url 'listing' listing.id %}" class="btn btn-primary">Go to listing</a>
+                    {% if watchlist %}
+                        <a class="text-end btn btn-outline-danger mt-2" href="{% url "remove_from_watchlist" listing.id %}">Remove From Watchlist <i class="fas fa-trash"></i></a>
+
+            
+                    {% endif %}
+                </div>
+        </div>
     </div>
-</div>
+<!--/div-->

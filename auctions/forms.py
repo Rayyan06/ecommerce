@@ -18,34 +18,38 @@ class ListingForm(forms.ModelForm):
         }
 
 
-class BidForm(forms.Form):
-
-    amount = forms.IntegerField(widget=forms.NumberInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Bid Amount'
-            }
-        ))
-
+class BidForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        """
-        Override the __init__ method so we can have access
-        to request.user and listing_id for validation
-        """
-        self.request_user = kwargs.pop("request_user")
-        self.listing = kwargs.pop("listing")
+        self.listing_id = kwargs.pop("listing_id")
         super(BidForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Bid
+        fields = ['amount']
+        widgets={
+            'amount': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Bid Amount',
+                }
+            ),
+        }
     
     def clean_amount(self):
+        amount = self.cleaned_data['amount']
+        listing = Listing.objects.get(pk=self.listing_id)
+        if amount < listing.price:
+            raise forms.ValidationError(
+                "Please bid more than the highest bid $%(value)s", 
+                params={'value': listing.price},
+                code="invalid")
 
-        amount = self.cleaned_data["amount"]
-
-        if self.listing.price > amount:
-            raise forms.ValidationError(f"Please bid higher than the current bid (${self.listing.price})")
-        
+        # Always return the modified field
         return amount
-        
+
+
+    
 
         
     

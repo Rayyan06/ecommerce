@@ -2,9 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 
 from .models import User, Listing, Bid, CATEGORIES
@@ -110,22 +111,22 @@ def create(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
 
+    bid_form = BidForm(listing_id=listing_id)
+    comment_form = CommentForm()
+
     if request.method=='POST':
-        bid_form = BidForm(request.POST, request_user=request.user, listing=listing)
-        comment_form = CommentForm()
+        bid_form = BidForm(request.POST, listing_id=listing_id)
 
         if bid_form.is_valid():
-            amount = bid_form.cleaned_data["amount"]
 
-            Bid.objects.create(user=request.user, amount=amount, listing=listing)
-        
+            bid = bid_form.save(commit=False)
 
-
-   
-        
-    else:
-        bid_form = BidForm(request_user=request.user, listing=listing)
-        comment_form = CommentForm()
+            bid.listing = listing
+            bid.user = request.user
+            bid.save()
+            
+            messages.add_message(request, messages.INFO, f"This Listing has been automatically added to your watchlist!")
+            return HttpResponseRedirect(reverse("add_to_watchlist", args=[listing_id]))
 
     listing_in_watchlist = False
     is_creator = (request.user == listing.listed_by)
@@ -161,10 +162,12 @@ def listing(request, listing_id):
     })
 
 
+
 @login_required
 def watchlist(request):
+
     return render(request, "auctions/watchlist.html", {
-        "watchlist": request.user.watchlist.all()
+        "watchlist": request.user.watchlist.all(),
     })
 
 # Add and Remove from watchlist views
@@ -181,7 +184,7 @@ def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     request.user.watchlist.remove(listing)
 
-    return HttpResponseRedirect(reverse("watchlist"))
+    return HttpResponseRedirect(reverse("listing", args=[listing_id]))
 
 
 
@@ -207,10 +210,12 @@ def comment(request, listing_id):
                 
         comment = comment_form.save(commit=False)
         comment.user = request.user
-        comment.listing = Listing.objects.get(pk=listing_id)
+        comment.listing = listing
         comment.save()
 
 
     return HttpResponseRedirect(reverse('listing', args=[listing_id]))
 
-   
+
+        
+

@@ -4,17 +4,16 @@
 <h1>My Watchlist</h1>
 
 <hr>
-<div class="row row-cols-1 row-cols-md-2 pt-5">
-    {% for item in watchlist %}
-        <div class="col-mb-4">
-            {% include "auctions/listing_card.html" with listing=item %}
-        </div>
-    {% empty %}
-        <div class="col">
-            <p>You have nothing in your watchlist at the moment. Would you like to <a href="{% url 'index' %}">browse</a> active listings?</p>
-        </div>
-
-    {% endfor %}
+<!--div class="row row-cols-2 row-cols-md-3 pt-5" -->
+<div class="card-columns">
+{% for item in watchlist %}
+    {% include "auctions/listing_card.html" with listing=item %}
+{% empty %}
 </div>
+<div class="col">
+    <p>You have nothing in your watchlist at the moment. Would you like to <a href="{% url 'index' %}">browse</a> active listings?</p>
+</div>
+
+{% endfor %}
 
 {% endblock %}

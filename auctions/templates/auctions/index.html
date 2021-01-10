@@ -1,18 +1,19 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <div class="container py-5">
+    <div class="row mb-5">
         <h1>Active Listings</h1>
     </div>
-    <hr>
-  
-    {% for listing in listings %}
-        <div class="card-columns">
+        <hr>
+    <!-- <div class="row row-cols-3 row-cols-md-4"> -->
+    <div class="card-columns">
+        
+        {% for listing in listings %}
             {% include "auctions/listing_card.html" %}
-            </div>
-    {% empty %}
-        <p>There are currently no active listings. Would you like to <a href="{% url 'create' %}">create</a> one?</p>
-    {% endfor %}
+        {% empty %}
+            <p>There are currently no active listings. Would you like to <a href="{% url 'create' %}">create</a> one?</p>
+        {% endfor %}
+    </div>
    
 
 {% endblock %}

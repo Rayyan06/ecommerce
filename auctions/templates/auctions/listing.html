@@ -61,6 +61,8 @@
                                 <small id="bidHelper" class="form-text text-muted">
                                     {{ listing.bids.count }} Bid(s) so far.
                                 </small>
+                                <input type="hidden" value="{{ listing.id }}" name="listing_id">
+
                                 {{ bid_form.amount }}
                             </div>
                             <input type="submit" value="Bid" class="btn btn-primary">
@@ -80,7 +82,7 @@
             <h3>Details</h3>
             <ul>
                 <li> Listed By: <strong>{{ listing.listed_by }}</strong></li>
-                <li> Category: <a href="#">{{ listing.get_category_display }}</a></li>
+                <li> Category: <a href="{% url 'category' listing.category %}">{{ listing.get_category_display }}</a></li>
             </ul>
         </div>
         <div class='col-9 py-5'>

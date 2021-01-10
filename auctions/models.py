@@ -7,7 +7,9 @@ CATEGORIES = [
     ('FA', 'Fashion'),
     ('TO', 'Toys'),
     ('EL', 'Electronics'),
-    ('HO', 'Home')
+    ('HO', 'Home'),
+    ('EN', 'Entertainment'),
+    ('CA', 'Cars')
 ]
 
 class User(AbstractUser):
@@ -24,7 +26,7 @@ class Listing(models.Model):
     listed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     starting_bid = models.IntegerField()
 
-    image_url = models.URLField(max_length=200, blank=True, null=True)
+    image_url = models.URLField(max_length=350, blank=True, null=True)
     category = models.CharField(
         max_length=2,
         choices=CATEGORIES,
@@ -48,10 +50,8 @@ class Listing(models.Model):
 
 
 
-
-
 class Bid(models.Model):
-    amount = models.DecimalField(decimal_places=2, max_digits=7)
+    amount = models.DecimalField(decimal_places=2, max_digits=9)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, related_name="bids", on_delete=models.CASCADE)
 
@@ -62,13 +62,13 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     title = models.CharField(max_length=20)
-    text = models.CharField(max_length=64)
+    text = models.CharField(max_length=128)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.text
+        return self.title
     
 
     
